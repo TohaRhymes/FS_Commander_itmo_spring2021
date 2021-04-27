@@ -21,3 +21,5 @@ int probe_cache(blkid_cache *cache);
 void check_and_print(blkid_probe *probe, char *tag);
 
 int iterate_dev(blkid_cache *cache);
+
+void print_info();

@@ -4,18 +4,27 @@
 #include <blkid/blkid.h>
 #include "genius_info.h"
 
+ll count_fract(ll size, ll name) {
+    return ((ll) (size * 100 / name) - (ll) (size / name) * 100) % 100;
+}
+
 
 void print_size(ll size) {
+    printf("%lld   B\t", (ll) size*8);
     if (size >= TB_amount) {
-        printf("%lld TiB\t", (ll) (size / TB_amount));
+        printf("%lld.%lld TiB\t", (ll) (size / TB_amount),
+               count_fract(size, TB_amount));
     } else if (size >= GB_amount) {
-        printf("%lld GiB\t", (ll) (size / GB_amount));
+        printf("%lld.%lld GiB\t", (ll) (size / GB_amount),
+               count_fract(size, GB_amount));
     } else if (size >= MB_amount) {
-        printf("%lld MiB\t", (ll) (size / MB_amount));
+        printf("%lld.%lld MiB\t", (ll) (size / MB_amount),
+               count_fract(size, MB_amount));
     } else if (size >= KB_amount) {
-        printf("%lld KiB\t", (ll) (size / KB_amount));
+        printf("%lld.%lld KiB\t", (ll) (size / KB_amount),
+               count_fract(size, KB_amount));
     } else {
-        printf("%lld   B\t", (ll) size);
+        printf("%lld B\t", (ll) size);
     }
 }
 
@@ -71,4 +80,11 @@ int iterate_dev(blkid_cache *cache) {
         }
         printf("\n");
     }
+}
+
+void print_info(){
+    blkid_cache cache;
+    initialize_cache(&cache);
+    probe_cache(&cache);
+    iterate_dev(&cache);
 }
